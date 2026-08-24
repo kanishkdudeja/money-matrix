@@ -11,7 +11,7 @@ make frontend-install
 make frontend-run
 ```
 
-Vite listens on `http://localhost:5173` and proxies `/api` and `/health` to `http://localhost:8080`. Set `VITE_API_BASE_URL` only when the API is intentionally hosted on another origin.
+Vite listens on `http://localhost:4040` and proxies `/api` and `/health` to `http://localhost:6060`. Set `VITE_API_BASE_URL` only when the API is intentionally hosted on another origin.
 
 ## Useful commands
 

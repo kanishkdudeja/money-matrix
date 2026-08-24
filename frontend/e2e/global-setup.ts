@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 export default function globalSetup() {
   const databaseURL = process.env.E2E_DATABASE_URL
     ?? process.env.TEST_DATABASE_URL
-    ?? "postgres://money_matrix:money_matrix_local@localhost:5432/money_matrix_test?sslmode=disable";
+    ?? "postgres://money_matrix:money_matrix_local@localhost:4321/money_matrix_test?sslmode=disable";
   const backendDirectory = fileURLToPath(new URL("../../backend", import.meta.url));
   const migration = spawnSync(
     "go",

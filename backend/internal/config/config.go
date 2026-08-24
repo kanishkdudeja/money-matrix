@@ -15,9 +15,9 @@ type Config struct {
 func Load() (Config, error) {
 	cfg := Config{
 		DatabaseURL:       os.Getenv("DATABASE_URL"),
-		HTTPAddr:          valueOrDefault("HTTP_ADDR", ":8080"),
+		HTTPAddr:          valueOrDefault("HTTP_ADDR", ":6060"),
 		Environment:       valueOrDefault("APP_ENV", "development"),
-		CORSAllowedOrigin: valueOrDefault("CORS_ALLOWED_ORIGIN", "http://localhost:5173"),
+		CORSAllowedOrigin: valueOrDefault("CORS_ALLOWED_ORIGIN", "http://localhost:4040"),
 	}
 	if cfg.DatabaseURL == "" {
 		return Config{}, errors.New("DATABASE_URL is required")

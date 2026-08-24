@@ -37,7 +37,7 @@ make frontend-install
 make frontend-run
 ```
 
-Open `http://localhost:5173`. Vite proxies `/api` and `/health` directly to the Go API at `http://localhost:8080`; there is no Node or Fastify application server. A production deployment can serve `frontend/dist` and the Go API behind the same origin.
+Open `http://localhost:4040`. Vite proxies `/api` and `/health` directly to the Go API at `http://localhost:6060`; there is no Node or Fastify application server. PostgreSQL is exposed on host port `4321`. A production deployment can serve `frontend/dist` and the Go API behind the same origin.
 
 PostgreSQL can run natively or through `compose.yaml`; the application only depends on `DATABASE_URL`.
 

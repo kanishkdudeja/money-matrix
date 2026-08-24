@@ -18,10 +18,13 @@ func TestLoadUsesDefaults(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Load() error = %v", err)
 	}
-	if cfg.HTTPAddr != ":8080" {
-		t.Fatalf("HTTPAddr = %q, want :8080", cfg.HTTPAddr)
+	if cfg.HTTPAddr != ":6060" {
+		t.Fatalf("HTTPAddr = %q, want :6060", cfg.HTTPAddr)
 	}
 	if cfg.Environment != "development" {
 		t.Fatalf("Environment = %q, want development", cfg.Environment)
+	}
+	if cfg.CORSAllowedOrigin != "http://localhost:4040" {
+		t.Fatalf("CORSAllowedOrigin = %q, want http://localhost:4040", cfg.CORSAllowedOrigin)
 	}
 }

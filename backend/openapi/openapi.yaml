@@ -4,7 +4,7 @@ info:
   version: 0.1.0
   description: Personal financial ledger, allocation, import, and reconciliation API.
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:6060
 paths:
   /health/live:
     get:

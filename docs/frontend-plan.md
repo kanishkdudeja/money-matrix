@@ -185,7 +185,7 @@ Guide the user through account, statement date, and statement balance. Show comp
 - Keep API money as strings until an explicit formatting or exact-arithmetic boundary.
 - Do not duplicate backend financial invariants as authoritative frontend rules. Mirror enough validation for immediate feedback, then display backend `Problem` details if the command is rejected.
 
-During development, Vite should proxy `/api` and `/health` to `http://localhost:8080`. Production should serve the static frontend and Go API through one origin where practical, eliminating routine CORS configuration.
+During development, Vite should proxy `/api` and `/health` to `http://localhost:6060`. Production should serve the static frontend and Go API through one origin where practical, eliminating routine CORS configuration.
 
 ## Backend contract gaps to address incrementally
 
