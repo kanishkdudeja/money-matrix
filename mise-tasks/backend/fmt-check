@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Check Go formatting"
+set -euo pipefail
+
+unformatted="$(gofmt -l backend)"
+if [ -n "$unformatted" ]; then
+  echo "$unformatted"
+  echo "Go files need formatting" >&2
+  exit 1
+fi

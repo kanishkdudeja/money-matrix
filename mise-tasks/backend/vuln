@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run the official Go vulnerability scanner"
+set -euo pipefail
+
+cd backend
+go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 ./...

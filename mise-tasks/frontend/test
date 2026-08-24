@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run frontend unit and component tests"
+set -euo pipefail
+
+cd frontend
+npm test

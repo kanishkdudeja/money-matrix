@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Install exact frontend dependencies"
+set -euo pipefail
+
+cd frontend
+npm ci

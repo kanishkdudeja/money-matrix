@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#MISE description="Verify local development prerequisites and installed state"
+set -euo pipefail
+
+for command_name in docker go node npm; do
+  command -v "$command_name" >/dev/null 2>&1 || {
+    echo "Missing required command: $command_name" >&2
+    exit 1
+  }
+done
+
+test -f .env || {
+  echo "Missing .env; run 'mise run bootstrap'." >&2
+  exit 1
+}
+
+test -d frontend/node_modules || {
+  echo "Missing frontend/node_modules; run 'mise run frontend:install'." >&2
+  exit 1
+}
+
+docker compose exec -T postgres pg_isready -U money_matrix -d money_matrix_dev >/dev/null
+
+echo "Go: $(go version)"
+echo "Node: $(node --version)"
+echo "npm: $(npm --version)"
+echo "PostgreSQL: ready on localhost:4321"
+echo "Backend: http://localhost:6060"
+echo "Frontend: http://localhost:4040"

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Generate frontend TypeScript definitions from OpenAPI"
+set -euo pipefail
+
+cd frontend
+npm run generate:api

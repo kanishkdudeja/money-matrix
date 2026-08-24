@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Format handwritten Go source files"
+set -euo pipefail
+
+cd backend
+find . -name '*.go' \
+  -not -path './internal/database/generated/*' \
+  -not -path './internal/httpapi/generated/*' \
+  -exec gofmt -w {} +

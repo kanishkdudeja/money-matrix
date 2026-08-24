@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run Go tests without PostgreSQL integration tests"
+set -euo pipefail
+
+cd backend
+env -u TEST_DATABASE_URL go test ./...

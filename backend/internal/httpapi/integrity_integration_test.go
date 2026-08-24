@@ -14,8 +14,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/kanishkdudeja/money-matrix/backend/internal/id"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/kanishkdudeja/money-matrix/backend/internal/id"
 )
 
 func TestIntegrityAndLifecycleWorkflowsAgainstPostgres(t *testing.T) {

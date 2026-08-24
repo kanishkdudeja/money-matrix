@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+#MISE description="Set up the complete local development environment"
+set -euo pipefail
+
+command -v docker >/dev/null 2>&1 || {
+  echo "Docker with the Compose plugin is required." >&2
+  exit 1
+}
+
+docker info >/dev/null 2>&1 || {
+  echo "Docker is installed but its daemon is not available." >&2
+  exit 1
+}
+
+if [ ! -f .env ]; then
+  cp .env.example .env
+  echo "Created .env from .env.example"
+else
+  echo "Preserving existing .env"
+fi
+
+mise run frontend:install
+mise run db:start
+mise run db:up
+mise run db:test-up
+mise run doctor
+
+echo "Money Matrix is ready. Run the tmux launcher or start the backend and frontend tasks."

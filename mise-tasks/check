@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#MISE description="Run the complete backend and frontend verification suite"
+set -euo pipefail
+
+mise run backend:fmt-check
+mise run generate-check
+mise run backend:test
+mise run backend:race
+mise run backend:vet
+mise run backend:build
+mise run backend:vuln
+mise run frontend:typecheck
+mise run frontend:lint
+mise run frontend:test
+mise run frontend:build

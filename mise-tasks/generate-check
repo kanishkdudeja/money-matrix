@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Check all generated source files for drift"
+set -euo pipefail
+
+mise run generate
+git diff --exit-code -- \
+  backend/internal/database/generated \
+  backend/internal/httpapi/generated \
+  frontend/src/api/generated.d.ts

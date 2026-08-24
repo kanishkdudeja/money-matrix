@@ -5,10 +5,10 @@ import (
 	"errors"
 	"time"
 
-	dbgen "github.com/kanishkdudeja/money-matrix/backend/internal/database/generated"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
+	dbgen "github.com/kanishkdudeja/money-matrix/backend/internal/database/generated"
 )
 
 // Transactor runs database-only callbacks atomically. A callback may be retried

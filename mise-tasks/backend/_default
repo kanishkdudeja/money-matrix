@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#MISE description="Run the Go API"
+set -euo pipefail
+
+source scripts/lib/env.sh
+load_project_env
+cd backend
+exec go run ./cmd/api

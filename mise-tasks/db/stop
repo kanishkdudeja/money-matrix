@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Stop PostgreSQL while preserving its data volume"
+set -euo pipefail
+
+docker compose down

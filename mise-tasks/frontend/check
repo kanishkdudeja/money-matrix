@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Generate, type-check, lint, test, and build the frontend"
+set -euo pipefail
+
+mise run frontend:generate-check
+mise run frontend:typecheck
+mise run frontend:lint
+mise run frontend:test
+mise run frontend:build

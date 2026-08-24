@@ -7,8 +7,8 @@ React and TypeScript client for the Money Matrix Go API.
 From the repository root:
 
 ```sh
-make frontend-install
-make frontend-run
+mise run frontend:install
+mise run frontend
 ```
 
 Vite listens on `http://localhost:4040` and proxies `/api` and `/health` to `http://localhost:6060`. Set `VITE_API_BASE_URL` only when the API is intentionally hosted on another origin.
@@ -24,7 +24,7 @@ npm run test:e2e
 npm run build
 ```
 
-Run these inside `frontend/`, or use `make frontend-check` from the repository root.
+Run these inside `frontend/`, or use `mise run frontend:check` from the repository root.
 
 `src/api/generated.d.ts` is generated from `backend/openapi/openapi.yaml`; never edit it manually. API monetary values are signed integer strings in paise. All client arithmetic must go through `src/lib/money.ts` and remain exact.
 

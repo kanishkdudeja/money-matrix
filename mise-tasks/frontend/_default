@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run the Vite frontend"
+set -euo pipefail
+
+cd frontend
+exec npm run dev

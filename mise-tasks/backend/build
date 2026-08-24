@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Build the Go API"
+set -euo pipefail
+
+cd backend
+go build ./...

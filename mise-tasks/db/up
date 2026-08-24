@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#MISE description="Apply development database migrations"
+set -euo pipefail
+
+source scripts/lib/env.sh
+load_project_env
+cd backend
+go run github.com/pressly/goose/v3/cmd/goose@v3.27.3 -dir database/migrations postgres "$DATABASE_URL" up

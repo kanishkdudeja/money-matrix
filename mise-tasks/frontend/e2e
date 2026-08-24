@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#MISE description="Run real-browser end-to-end tests"
+set -euo pipefail
+
+source scripts/lib/env.sh
+load_project_env
+cd frontend
+npm run test:e2e

@@ -276,8 +276,8 @@ Prefer assertions on roles, labels, visible text, and user outcomes. Avoid snaps
 - Keyboard navigation and screen-reader labels cover core forms and dialogs.
 - Component tests cover important failures, not only happy paths.
 - The critical Playwright journeys pass against a freshly migrated test database.
-- `make frontend-check` performs OpenAPI generation drift checks, type checking, linting, unit/component tests, and a production build.
-- Root `make check` includes both backend and frontend checks.
+- `mise run frontend:check` performs OpenAPI generation drift checks, type checking, linting, unit/component tests, and a production build.
+- Root `mise run check` includes both backend and frontend checks.
 
 ## Deliberate deferrals
 

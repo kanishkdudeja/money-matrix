@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Run all Go tests, including PostgreSQL integration tests"
+set -euo pipefail
+
+source scripts/lib/env.sh
+load_project_env
+: "${TEST_DATABASE_URL:?TEST_DATABASE_URL is required}"
+cd backend
+go test ./...

@@ -79,12 +79,11 @@ Before leaving the current computer:
 On the new computer:
 
 1. Clone `https://github.com/kanishkdudeja/money-matrix.git` and enter its root directory.
-2. Install the versions described in the root README: Go, PostgreSQL, Node/npm, and optionally Google Chrome for the Playwright suite.
-3. Run `npm ci` through `make frontend-install`.
-4. Copy `.env.example` to `.env`, create the development and test databases, and supply local credentials.
-5. Run `make db-up` and then `make check`.
-6. Run `make frontend-e2e` when the dedicated/fallback test database and local Chrome are available.
-7. Restore application data with PostgreSQL tools if desired.
+2. Install mise and Docker with the Compose plugin, plus Google Chrome when the Playwright suite is wanted.
+3. Run `mise trust` and then `mise run bootstrap`. This installs the pinned Go and Node runtimes, creates `.env` when absent, installs frontend dependencies, starts PostgreSQL, and migrates both local databases.
+4. Run `mise run check`.
+5. Run `mise run frontend:e2e` when the dedicated/fallback test database and local Chrome are available.
+6. Restore application data with PostgreSQL tools if desired.
 
 Do not copy the whole Codex configuration directory merely to transfer this project. It can include credentials, approvals, caches, plugins, and machine-specific settings, and session-file portability is not a documented Codex CLI contract.
 

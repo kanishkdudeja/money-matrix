@@ -17,24 +17,28 @@ Canonical repository: [github.com/kanishkdudeja/money-matrix](https://github.com
 
 Requirements:
 
-- Go 1.27+
-- PostgreSQL 18
-- Node.js 24 and npm 11 (the exact Node version is in `frontend/.nvmrc`)
+- [mise](https://mise.jdx.dev/) 2026.7.14 or newer
+- Docker with the Compose plugin
+- Google Chrome only for the Playwright end-to-end suite
 
-Copy `.env.example` to `.env`, create the referenced databases, and then run:
+Trust the repository configuration and run the idempotent bootstrap. mise installs the pinned Go 1.27 and Node.js 24.13.1 runtimes, creates `.env` when absent, installs the frontend dependency tree, starts PostgreSQL 18, and migrates the development and test databases:
 
 ```sh
-make db-up
-make backend-run
+mise trust
+mise run bootstrap
 ```
 
-The API exposes liveness and database-readiness checks at `/health/live` and `/health/ready`.
-
-In a second terminal, install the pinned frontend dependency tree and start Vite:
+Start the API and frontend in separate terminals:
 
 ```sh
-make frontend-install
-make frontend-run
+mise run backend
+mise run frontend
+```
+
+The API exposes liveness and database-readiness checks at `/health/live` and `/health/ready`. The checked-in tasks can be listed with:
+
+```sh
+mise tasks ls
 ```
 
 Open `http://localhost:4040`. Vite proxies `/api` and `/health` directly to the Go API at `http://localhost:6060`; there is no Node or Fastify application server. PostgreSQL is exposed on host port `4321`. A production deployment can serve `frontend/dist` and the Go API behind the same origin.
@@ -104,16 +108,16 @@ Interfaces are intentionally consumer-defined and narrow. The important one is t
 ## Verification
 
 ```sh
-make backend-test
-make backend-build
-make frontend-check
-make frontend-e2e
-make check
+mise run backend:test
+mise run backend:build
+mise run frontend:check
+mise run frontend:e2e
+mise run check
 ```
 
-Backend tests combine fast unit tests with PostgreSQL-backed HTTP workflow tests using `money_matrix_test`. Frontend tests cover exact financial utilities and user-visible components through Vitest, Testing Library, and MSW. `make frontend-e2e` starts the real Go and Vite servers, migrates `E2E_DATABASE_URL` (falling back to `TEST_DATABASE_URL`), and drives the installed Chrome browser through the critical workflow. Use a dedicated disposable PostgreSQL database for E2E outside local development.
+Backend tests combine fast unit tests with PostgreSQL-backed HTTP workflow tests using `money_matrix_test`. Frontend tests cover exact financial utilities and user-visible components through Vitest, Testing Library, and MSW. `mise run frontend:e2e` starts the real Go and Vite servers, migrates `E2E_DATABASE_URL` (falling back to `TEST_DATABASE_URL`), and drives the installed Chrome browser through the critical workflow. Use a dedicated disposable PostgreSQL database for E2E outside local development.
 
-`make check` requires `TEST_DATABASE_URL`; it verifies generated code, formatting, type safety, linting, unit/integration/component tests, the Go race detector and vet, production builds, and `govulncheck`.
+`mise run check` loads `TEST_DATABASE_URL` from `.env`; it verifies generated code, formatting, type safety, linting, unit/integration/component tests, the Go race detector and vet, production builds, and `govulncheck`.
 
 ## Database portability
 
