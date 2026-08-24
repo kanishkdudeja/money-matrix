@@ -1,0 +1,396 @@
+openapi: 3.1.0
+info:
+  title: Money Matrix API
+  version: 0.1.0
+  description: Personal financial ledger, allocation, import, and reconciliation API.
+servers:
+  - url: http://localhost:8080
+paths:
+  /health/live:
+    get:
+      operationId: getLiveness
+      responses: {"200": {$ref: "#/components/responses/Health"}, default: {$ref: "#/components/responses/Problem"}}
+  /health/ready:
+    get:
+      operationId: getReadiness
+      responses:
+        "200": {$ref: "#/components/responses/Health"}
+        "503": {$ref: "#/components/responses/Problem"}
+  /api/accounts:
+    get:
+      operationId: listAccounts
+      responses: {"200": {description: Accounts, content: {application/json: {schema: {$ref: "#/components/schemas/AccountList"}}}}, default: {$ref: "#/components/responses/Problem"}}
+    post:
+      operationId: createAccount
+      requestBody: {$ref: "#/components/requestBodies/CreateAccount"}
+      responses:
+        "201": {description: Account created, content: {application/json: {schema: {$ref: "#/components/schemas/Account"}}}}
+        "422": {$ref: "#/components/responses/Problem"}
+        default: {$ref: "#/components/responses/Problem"}
+  /api/accounts/{id}:
+    patch:
+      operationId: updateAccount
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      requestBody:
+        required: true
+        content: {application/json: {schema: {type: object, properties: {name: {type: string}, note: {type: [string, "null"]}}}}}
+      responses: {"204": {description: Updated}, "404": {$ref: "#/components/responses/Problem"}, default: {$ref: "#/components/responses/Problem"}}
+  /api/accounts/{id}/archive:
+    post:
+      operationId: archiveAccount
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"204": {description: Archived}, default: {$ref: "#/components/responses/Problem"}}
+  /api/accounts/{id}/unarchive:
+    post:
+      operationId: unarchiveAccount
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"204": {description: Unarchived}, default: {$ref: "#/components/responses/Problem"}}
+  /api/categories:
+    get:
+      operationId: listCategories
+      responses: {"200": {description: Categories, content: {application/json: {schema: {$ref: "#/components/schemas/CategoryList"}}}}, default: {$ref: "#/components/responses/Problem"}}
+    post:
+      operationId: createCategory
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: "#/components/schemas/CreateCategory"}}}
+      responses: {"201": {description: Category created, content: {application/json: {schema: {$ref: "#/components/schemas/Category"}}}}, default: {$ref: "#/components/responses/Problem"}}
+  /api/categories/{id}/archive:
+    post:
+      operationId: archiveCategory
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"204": {description: Archived}, default: {$ref: "#/components/responses/Problem"}}
+  /api/categories/{id}/unarchive:
+    post:
+      operationId: unarchiveCategory
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"204": {description: Unarchived}, default: {$ref: "#/components/responses/Problem"}}
+  /api/buckets:
+    get:
+      operationId: listBuckets
+      responses: {"200": {description: Buckets, content: {application/json: {schema: {$ref: "#/components/schemas/BucketList"}}}}, default: {$ref: "#/components/responses/Problem"}}
+    post:
+      operationId: createBucket
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: "#/components/schemas/CreateBucket"}}}
+      responses: {"201": {description: Bucket created, content: {application/json: {schema: {$ref: "#/components/schemas/Bucket"}}}}, default: {$ref: "#/components/responses/Problem"}}
+  /api/buckets/{id}/archive:
+    post:
+      operationId: archiveBucket
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"204": {description: Archived}, default: {$ref: "#/components/responses/Problem"}}
+  /api/buckets/{id}/unarchive:
+    post:
+      operationId: unarchiveBucket
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"204": {description: Unarchived}, default: {$ref: "#/components/responses/Problem"}}
+  /api/transactions:
+    get:
+      operationId: listTransactions
+      parameters:
+        - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 200, default: 50}}
+        - {name: offset, in: query, schema: {type: integer, minimum: 0, default: 0}}
+      responses: {"200": {description: Transactions, content: {application/json: {schema: {$ref: "#/components/schemas/TransactionList"}}}}, default: {$ref: "#/components/responses/Problem"}}
+    post:
+      operationId: createTransaction
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: "#/components/schemas/CreateTransaction"}}}
+      responses:
+        "201": {description: Transaction created, content: {application/json: {schema: {$ref: "#/components/schemas/Transaction"}}}}
+        "422": {$ref: "#/components/responses/Problem"}
+        default: {$ref: "#/components/responses/Problem"}
+  /api/transactions/{id}:
+    get:
+      operationId: getTransaction
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses:
+        "200": {description: Transaction, content: {application/json: {schema: {$ref: "#/components/schemas/Transaction"}}}}
+        "404": {$ref: "#/components/responses/Problem"}
+        default: {$ref: "#/components/responses/Problem"}
+  /api/transactions/{id}/reverse:
+    post:
+      operationId: reverseTransaction
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      requestBody:
+        required: true
+        content: {application/json: {schema: {type: object, properties: {description: {type: string}}}}}
+      responses: {"201": {description: Reversal transaction created, content: {application/json: {schema: {$ref: "#/components/schemas/Transaction"}}}}, default: {$ref: "#/components/responses/Problem"}}
+  /api/dashboard:
+    get:
+      operationId: getDashboard
+      responses: {"200": {description: Dashboard, content: {application/json: {schema: {$ref: "#/components/schemas/Dashboard"}}}}, default: {$ref: "#/components/responses/Problem"}}
+  /api/parser-profiles:
+    get:
+      operationId: listParserProfiles
+      responses: {"200": {description: Parser profiles, content: {application/json: {schema: {$ref: "#/components/schemas/ParserProfileList"}}}}, default: {$ref: "#/components/responses/Problem"}}
+    post:
+      operationId: createParserProfile
+      requestBody:
+        required: true
+        content: {application/json: {schema: {type: object, required: [name, format, mapping], properties: {name: {type: string}, format: {type: string, enum: [csv, xlsx, pdf]}, institution: {type: [string, "null"]}, mapping: {type: object, additionalProperties: true}, parserVersion: {type: string}}}}}
+      responses: {"201": {description: Parser profile created, content: {application/json: {schema: {$ref: "#/components/schemas/ParserProfile"}}}}, default: {$ref: "#/components/responses/Problem"}}
+  /api/imports/csv:
+    post:
+      operationId: uploadCSVStatement
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [accountId, file]
+              properties:
+                accountId: {type: string, format: uuid}
+                mapping: {type: string, description: JSON-encoded CSV mapping}
+                profileId: {type: string, format: uuid, description: Existing CSV parser profile used when mapping is omitted}
+                file: {type: string, format: binary}
+              anyOf:
+                - required: [mapping]
+                - required: [profileId]
+      responses: {"201": {description: Import created, content: {application/json: {schema: {$ref: "#/components/schemas/ImportUploadResult"}}}}, "409": {$ref: "#/components/responses/Problem"}, default: {$ref: "#/components/responses/Problem"}}
+  /api/imports:
+    get:
+      operationId: listImportBatches
+      parameters:
+        - {name: status, in: query, schema: {type: string, enum: [uploaded, processing, ready, failed, completed]}}
+        - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 200, default: 50}}
+        - {name: offset, in: query, schema: {type: integer, minimum: 0, default: 0}}
+      responses: {"200": {description: Import batches, content: {application/json: {schema: {$ref: "#/components/schemas/ImportBatchList"}}}}, default: {$ref: "#/components/responses/Problem"}}
+  /api/imports/{id}:
+    get:
+      operationId: getImportBatch
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"200": {description: Import batch, content: {application/json: {schema: {$ref: "#/components/schemas/ImportBatch"}}}}, "404": {$ref: "#/components/responses/Problem"}, default: {$ref: "#/components/responses/Problem"}}
+  /api/imports/rows/{id}/categorization:
+    put:
+      operationId: categorizeImportedRow
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: "#/components/schemas/Categorization"}}}
+      responses: {"200": {description: Row reviewed, content: {application/json: {schema: {$ref: "#/components/schemas/ImportReviewResult"}}}}, "409": {$ref: "#/components/responses/Problem"}, "422": {$ref: "#/components/responses/Problem"}, default: {$ref: "#/components/responses/Problem"}}
+  /api/imports/rows/{id}/skip:
+    post:
+      operationId: skipImportedRow
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"204": {description: Skipped}, default: {$ref: "#/components/responses/Problem"}}
+  /api/imports/rows/{id}/suggestions:
+    get:
+      operationId: suggestImportedRowCategorization
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"200": {description: Categorization suggestions, content: {application/json: {schema: {$ref: "#/components/schemas/SuggestionList"}}}}, default: {$ref: "#/components/responses/Problem"}}
+  /api/rules:
+    get:
+      operationId: listCategorizationRules
+      responses: {"200": {description: Categorization rules, content: {application/json: {schema: {$ref: "#/components/schemas/RuleList"}}}}, default: {$ref: "#/components/responses/Problem"}}
+    post:
+      operationId: createCategorizationRule
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: "#/components/schemas/CreateRule"}}}
+      responses: {"201": {description: Rule created, content: {application/json: {schema: {$ref: "#/components/schemas/Rule"}}}}, default: {$ref: "#/components/responses/Problem"}}
+  /api/rules/{id}:
+    delete:
+      operationId: deleteCategorizationRule
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"204": {description: Deleted}, default: {$ref: "#/components/responses/Problem"}}
+  /api/reconciliations:
+    get:
+      operationId: listReconciliations
+      responses: {"200": {description: Reconciliations, content: {application/json: {schema: {$ref: "#/components/schemas/ReconciliationList"}}}}, default: {$ref: "#/components/responses/Problem"}}
+    post:
+      operationId: createReconciliation
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: "#/components/schemas/CreateReconciliation"}}}
+      responses: {"201": {description: Reconciliation created, content: {application/json: {schema: {$ref: "#/components/schemas/ReconciliationResult"}}}}, "409": {$ref: "#/components/responses/Problem"}, default: {$ref: "#/components/responses/Problem"}}
+  /api/reconciliations/{id}/complete:
+    post:
+      operationId: completeReconciliation
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"200": {description: Reconciliation completed, content: {application/json: {schema: {$ref: "#/components/schemas/ReconciliationResult"}}}}, "409": {$ref: "#/components/responses/Problem"}, default: {$ref: "#/components/responses/Problem"}}
+  /api/reconciliations/{id}:
+    parameters: [{$ref: "#/components/parameters/ID"}]
+    delete:
+      operationId: discardDraftReconciliation
+      responses: {"204": {description: Draft reconciliation discarded}, "404": {$ref: "#/components/responses/Problem"}, "409": {$ref: "#/components/responses/Problem"}, default: {$ref: "#/components/responses/Problem"}}
+  /api/reconciliations/{id}/reopen:
+    post:
+      operationId: reopenReconciliation
+      parameters: [{$ref: "#/components/parameters/ID"}]
+      responses: {"200": {description: Reconciliation reopened, content: {application/json: {schema: {$ref: "#/components/schemas/ReconciliationResult"}}}}, "409": {$ref: "#/components/responses/Problem"}, default: {$ref: "#/components/responses/Problem"}}
+  /api/export/transactions.csv:
+    get:
+      operationId: exportTransactions
+      responses:
+        "200": {description: Transaction export, content: {text/csv: {schema: {type: string}}}}
+        default: {$ref: "#/components/responses/Problem"}
+components:
+  parameters:
+    ID: {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+  requestBodies:
+    CreateAccount:
+      required: true
+      content: {application/json: {schema: {$ref: "#/components/schemas/CreateAccount"}}}
+  responses:
+    Health: {description: Health status, content: {application/json: {schema: {$ref: "#/components/schemas/Health"}}}}
+    Problem: {description: Error response, content: {application/problem+json: {schema: {$ref: "#/components/schemas/Problem"}}}}
+  schemas:
+    Health: {type: object, required: [status], properties: {status: {type: string}}}
+    Problem:
+      type: object
+      required: [type, title, status]
+      properties:
+        type: {type: string}
+        title: {type: string}
+        status: {type: integer}
+        detail: {type: string}
+        errors: {type: object, additionalProperties: {type: string}}
+    CreateAccount:
+      type: object
+      required: [name, kind, balanceClass, currency]
+      properties:
+        name: {type: string}
+        kind: {type: string, enum: [bank, cash, credit_card, loan, investment, other]}
+        balanceClass: {type: string, enum: [asset, liability]}
+        currency: {type: string, const: INR}
+        note: {type: [string, "null"]}
+    Account:
+      allOf:
+        - {$ref: "#/components/schemas/CreateAccount"}
+        - {type: object, required: [id, balance, archived], properties: {id: {type: string, format: uuid}, balance: {$ref: "#/components/schemas/MoneyAmount"}, archived: {type: boolean}}}
+    AccountList: {type: object, required: [items], properties: {items: {type: array, items: {$ref: "#/components/schemas/Account"}}}}
+    CreateCategory:
+      type: object
+      required: [name, kind]
+      properties: {name: {type: string}, kind: {type: string, enum: [income, expense]}, parentId: {type: [string, "null"], format: uuid}}
+    CreateBucket:
+      type: object
+      required: [name]
+      properties: {name: {type: string}, note: {type: [string, "null"]}}
+    Category:
+      type: object
+      required: [id, name, kind, archived]
+      properties: {id: {type: string, format: uuid}, name: {type: string}, kind: {type: string, enum: [income, expense]}, parentId: {type: [string, "null"], format: uuid}, archived: {type: boolean}}
+    CategoryList: {type: object, required: [items], properties: {items: {type: array, items: {$ref: "#/components/schemas/Category"}}}}
+    Bucket:
+      type: object
+      required: [id, name, balance, archived, system]
+      properties: {id: {type: string, format: uuid}, name: {type: string}, note: {type: [string, "null"]}, balance: {$ref: "#/components/schemas/MoneyAmount"}, archived: {type: boolean}, system: {type: boolean}}
+    BucketList: {type: object, required: [items], properties: {items: {type: array, items: {$ref: "#/components/schemas/Bucket"}}}}
+    MoneyAmount: {type: string, pattern: "^-?[0-9]+$", description: Signed integer minor currency units encoded as a string; for INR the unit is paise}
+    PostingInput:
+      type: object
+      additionalProperties: false
+      required: [accountId, amount]
+      properties: {accountId: {type: string, format: uuid}, amount: {$ref: "#/components/schemas/MoneyAmount"}, memo: {type: [string, "null"]}}
+    BucketEntryInput:
+      type: object
+      additionalProperties: false
+      required: [bucketId, amount]
+      properties: {bucketId: {type: string, format: uuid}, categoryId: {type: [string, "null"], format: uuid}, amount: {$ref: "#/components/schemas/MoneyAmount"}, memo: {type: [string, "null"]}}
+    CreateTransaction:
+      type: object
+      required: [occurredOn, description, kind]
+      properties:
+        occurredOn: {type: string, format: date}
+        description: {type: string}
+        kind: {type: string, enum: [income, expense, transfer, refund, adjustment, opening_balance, bucket_transfer]}
+        postings: {type: array, items: {$ref: "#/components/schemas/PostingInput"}}
+        bucketEntries: {type: array, items: {$ref: "#/components/schemas/BucketEntryInput"}}
+    Transaction:
+      type: object
+      required: [id, occurredOn, description, kind, status, origin, postings, bucketEntries]
+      properties:
+        id: {type: string, format: uuid}
+        occurredOn: {type: string, format: date}
+        description: {type: string}
+        kind: {type: string, enum: [income, expense, transfer, refund, adjustment, opening_balance, bucket_transfer]}
+        status: {type: string, enum: [draft, posted, reversed]}
+        origin: {type: string, enum: [manual, import, recurring_rule, system]}
+        reversalOfId: {type: [string, "null"], format: uuid}
+        postings: {type: array, items: {$ref: "#/components/schemas/Posting"}}
+        bucketEntries: {type: array, items: {$ref: "#/components/schemas/BucketEntry"}}
+    Posting:
+      type: object
+      required: [id, accountId, amount]
+      properties: {id: {type: string, format: uuid}, accountId: {type: string, format: uuid}, amount: {$ref: "#/components/schemas/MoneyAmount"}, memo: {type: [string, "null"]}}
+    BucketEntry:
+      type: object
+      required: [id, bucketId, amount]
+      properties: {id: {type: string, format: uuid}, bucketId: {type: string, format: uuid}, categoryId: {type: [string, "null"], format: uuid}, amount: {$ref: "#/components/schemas/MoneyAmount"}, memo: {type: [string, "null"]}}
+    TransactionList: {type: object, required: [items, limit, offset], properties: {items: {type: array, items: {$ref: "#/components/schemas/Transaction"}}, limit: {type: integer}, offset: {type: integer}}}
+    Dashboard:
+      type: object
+      required: [assets, liabilities, netCovered, bucketTotal, difference, balanced, importsNeedingReview]
+      properties: {assets: {$ref: "#/components/schemas/MoneyAmount"}, liabilities: {$ref: "#/components/schemas/MoneyAmount"}, netCovered: {$ref: "#/components/schemas/MoneyAmount"}, bucketTotal: {$ref: "#/components/schemas/MoneyAmount"}, difference: {$ref: "#/components/schemas/MoneyAmount"}, balanced: {type: boolean}, importsNeedingReview: {type: integer, format: int64}}
+    Categorization:
+      type: object
+      properties:
+        bucketEntries: {type: array, items: {$ref: "#/components/schemas/BucketEntryInput"}}
+    CreateRule:
+      type: object
+      required: [name, conditions]
+      properties:
+        name: {type: string}
+        priority: {type: integer}
+        conditions: {type: object, additionalProperties: true}
+        categoryId: {type: [string, "null"], format: uuid}
+        bucketId: {type: [string, "null"], format: uuid}
+        transactionKind: {type: [string, "null"]}
+        autoApply: {type: boolean}
+    ParserProfile:
+      type: object
+      required: [id, name, format, mapping, parserVersion]
+      properties: {id: {type: string, format: uuid}, name: {type: string}, format: {type: string, enum: [csv, xlsx, pdf]}, institution: {type: [string, "null"]}, mapping: {type: object, additionalProperties: true}, parserVersion: {type: string}}
+    ParserProfileList: {type: object, required: [items], properties: {items: {type: array, items: {$ref: "#/components/schemas/ParserProfile"}}}}
+    ImportUploadResult:
+      type: object
+      required: [id, status, imported, duplicates, invalid]
+      properties: {id: {type: string, format: uuid}, status: {type: string}, imported: {type: integer}, duplicates: {type: integer}, invalid: {type: integer}}
+    ImportBatchSummary:
+      type: object
+      required: [id, accountId, fileName, status, createdAt, imported, duplicates, invalid, pending]
+      properties: {id: {type: string, format: uuid}, accountId: {type: string, format: uuid}, fileName: {type: string}, status: {type: string}, createdAt: {type: string, format: date-time}, imported: {type: integer}, duplicates: {type: integer}, invalid: {type: integer}, pending: {type: integer}}
+    ImportBatchList: {type: object, required: [items, limit, offset], properties: {items: {type: array, items: {$ref: "#/components/schemas/ImportBatchSummary"}}, limit: {type: integer}, offset: {type: integer}}}
+    ImportedRow:
+      type: object
+      required: [id, sourceRow, reviewStatus, parseErrors]
+      properties: {id: {type: string, format: uuid}, sourceRow: {type: integer}, transactionDate: {type: [string, "null"], format: date}, description: {type: [string, "null"]}, reference: {type: [string, "null"]}, amount: {oneOf: [{$ref: "#/components/schemas/MoneyAmount"}, {type: "null"}]}, balance: {oneOf: [{$ref: "#/components/schemas/MoneyAmount"}, {type: "null"}]}, transactionId: {type: [string, "null"], format: uuid}, reviewStatus: {type: string}, parseErrors: {type: array, items: {type: string}}}
+    ImportBatch:
+      type: object
+      required: [id, accountId, fileName, status, createdAt, rows]
+      properties: {id: {type: string, format: uuid}, accountId: {type: string, format: uuid}, fileName: {type: string}, status: {type: string}, createdAt: {type: string, format: date-time}, rows: {type: array, items: {$ref: "#/components/schemas/ImportedRow"}}}
+    ImportReviewResult:
+      type: object
+      required: [id, transactionId, reviewStatus]
+      properties: {id: {type: string, format: uuid}, transactionId: {type: string, format: uuid}, reviewStatus: {type: string, const: reviewed}}
+    Rule:
+      type: object
+      required: [id, name, priority, conditions, autoApply, enabled]
+      properties: {id: {type: string, format: uuid}, name: {type: string}, priority: {type: integer}, conditions: {type: object, additionalProperties: true}, categoryId: {type: [string, "null"], format: uuid}, bucketId: {type: [string, "null"], format: uuid}, transactionKind: {type: [string, "null"]}, autoApply: {type: boolean}, enabled: {type: boolean}}
+    RuleList: {type: object, required: [items], properties: {items: {type: array, items: {$ref: "#/components/schemas/Rule"}}}}
+    Suggestion:
+      type: object
+      required: [ruleId, ruleName, autoApply, confidence]
+      properties: {ruleId: {type: string, format: uuid}, ruleName: {type: string}, categoryId: {type: [string, "null"], format: uuid}, bucketId: {type: [string, "null"], format: uuid}, transactionKind: {type: [string, "null"]}, autoApply: {type: boolean}, confidence: {type: string}}
+    SuggestionList: {type: object, required: [items], properties: {items: {type: array, items: {$ref: "#/components/schemas/Suggestion"}}}}
+    CreateReconciliation:
+      type: object
+      required: [financialAccountId, statementDate, statementBalance, complete]
+      properties:
+        financialAccountId: {type: string, format: uuid}
+        statementDate: {type: string, format: date}
+        statementBalance: {$ref: "#/components/schemas/MoneyAmount"}
+        complete: {type: boolean}
+    ReconciliationResult:
+      type: object
+      required: [id, status, computedBalance, statementBalance, difference]
+      properties: {id: {type: string, format: uuid}, status: {type: string, enum: [in_progress, completed, reopened]}, computedBalance: {$ref: "#/components/schemas/MoneyAmount"}, statementBalance: {$ref: "#/components/schemas/MoneyAmount"}, difference: {$ref: "#/components/schemas/MoneyAmount"}}
+    Reconciliation:
+      type: object
+      required: [id, financialAccountId, statementDate, statementBalance, computedBalance, difference, status]
+      properties: {id: {type: string, format: uuid}, financialAccountId: {type: string, format: uuid}, statementDate: {type: string, format: date}, statementBalance: {$ref: "#/components/schemas/MoneyAmount"}, computedBalance: {$ref: "#/components/schemas/MoneyAmount"}, difference: {$ref: "#/components/schemas/MoneyAmount"}, status: {type: string, enum: [in_progress, completed, reopened]}, completedAt: {type: [string, "null"], format: date-time}}
+    ReconciliationList: {type: object, required: [items], properties: {items: {type: array, items: {$ref: "#/components/schemas/Reconciliation"}}}}

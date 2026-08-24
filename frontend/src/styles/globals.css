@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-primary-soft: var(--primary-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info-soft: var(--info-soft);
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif;
+  --font-display: Charter, "Iowan Old Style", "Palatino Linotype", serif;
+  --shadow-panel: 0 1px 2px rgb(24 35 29 / 0.04), 0 18px 50px rgb(24 35 29 / 0.06);
+}
+
+:root {
+  --canvas: #f7f5ef;
+  --surface: #fffdf8;
+  --surface-raised: #ffffff;
+  --ink: #17231d;
+  --ink-muted: #68736d;
+  --line: #dfe3dc;
+  --primary: #176b4d;
+  --primary-strong: #0d5139;
+  --primary-soft: #e3f2e9;
+  --warning: #9d5d05;
+  --warning-soft: #fff0cf;
+  --danger: #b3433b;
+  --danger-soft: #fbe6e3;
+  --info-soft: #e8eff5;
+}
+
+:root.dark {
+  --canvas: #111814;
+  --surface: #18221d;
+  --surface-raised: #1d2923;
+  --ink: #edf3ee;
+  --ink-muted: #a5b1a9;
+  --line: #334039;
+  --primary: #63c69a;
+  --primary-strong: #8bdab4;
+  --primary-soft: #193b2d;
+  --warning: #f1bd63;
+  --warning-soft: #3d3018;
+  --danger: #f08a82;
+  --danger-soft: #432422;
+  --info-soft: #263640;
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  background: var(--canvas);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 88% 4%, color-mix(in srgb, var(--primary-soft) 65%, transparent), transparent 24rem),
+    var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--primary-soft);
+  color: var(--ink);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
